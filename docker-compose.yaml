@@ -1,0 +1,43 @@
+version: '3.8'
+
+volumes:
+  database:
+  composer:
+
+services:
+  database:
+    image: mariadb:10.2
+    volumes:
+      - database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: bookhome
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - 3306:3306
+
+  php:
+    image: php
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./:/var/www/html
+      - composer:/root/.composer
+    depends_on:
+      - database
+
+  nginx:
+    image: nginx
+    build:
+      context: ./
+      dockerfile: docker/nginx/Dockerfile
+    volumes:
+      - ./public:/var/www/html/public
+      - ./docker/nginx/certs:/etc/ssl/certs/
+    depends_on:
+      - php
+    ports:
+      - 80:80
+      - 443:443
