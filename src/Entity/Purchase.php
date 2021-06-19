@@ -16,8 +16,8 @@ class Purchase
     #[ORM\Column(type:"string", length:255)]
     private $name;
 
-    #[ORM\Column(type:"string", length:10)]
-    private $status;
+    #[ORM\Column(type:"boolean")]
+    private $completed = false;
 
     #[ORM\ManyToOne(targetEntity:User::class)]
     #[ORM\JoinColumn(nullable:false)]
@@ -44,14 +44,14 @@ class Purchase
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function isCompleted(): ?bool
     {
-        return $this->status;
+        return $this->completed;
     }
 
-    public function setStatus(string $status): self
+    public function setCompleted(bool $completed): self
     {
-        $this->status = $status;
+        $this->completed = $completed;
 
         return $this;
     }

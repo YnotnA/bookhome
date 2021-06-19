@@ -2,22 +2,41 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\TaskRepository;
+use App\Resolver\TaskMutationResolver;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass:TaskRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:Task']],
+    graphql: [
+        'item_query',
+        'create' => [
+            'denormalization_context' => ['groups' => ['create:Task']],
+            'mutation' => TaskMutationResolver::class
+        ],
+        'delete' => [
+            'normalization_context' => ['groups' => ['delete:Task']]
+        ]
+    ]
+)]
 class Task
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:Task','delete:Task'])]
     private $id;
 
     #[ORM\Column(type:"string", length:255)]
+    #[Groups(['read:Task','create:Task'])]
     private $name;
 
-    #[ORM\Column(type:"string", length:10)]
-    private $status;
+    #[ORM\Column(type:"boolean")]
+    #[Groups(['read:Task'])]
+    private $completed = false;
 
     #[ORM\ManyToOne(targetEntity:User::class)]
     #[ORM\JoinColumn(nullable:false)]
@@ -25,6 +44,7 @@ class Task
 
     #[ORM\ManyToOne(targetEntity:Location::class, inversedBy:"tasks")]
     #[ORM\JoinColumn(nullable:false)]
+    #[Groups(['create:Task'])]
     private $location;
 
     public function getId(): ?int
@@ -44,14 +64,14 @@ class Task
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function isCompleted(): ?bool
     {
-        return $this->status;
+        return $this->completed;
     }
 
-    public function setStatus(string $status): self
+    public function setCompleted(bool $completed): self
     {
-        $this->status = $status;
+        $this->completed = $completed;
 
         return $this;
     }
