@@ -4,37 +4,51 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
+use App\Resolver\MeResolver;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass:UserRepository::class)]
 #[ORM\Table(name:"`user`")]
 #[ApiResource(
-    graphql: ['item_query']
+    normalizationContext: ['groups' => ['read:User']],
+    graphql: [
+        'me' => [
+            'item_query' => MeResolver::class,
+            'args' => []
+        ]
+    ]
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:User'])]
     private $id;
 
     #[ORM\Column(type:"string", length:180, unique:true)]
+    #[Groups(['read:User'])]
     private $email;
 
     #[ORM\Column(type:"json")]
+    #[Groups(['read:User'])]
     private $roles = [];
 
     #[ORM\Column(type:"string")]
     private $password;
  
     #[ORM\Column(type:"string", length:20)]
+    #[Groups(['read:User'])]
     private $firstname;
 
     #[ORM\Column(type:"string", length:20)]
+    #[Groups(['read:User'])]
     private $lastname;
 
     #[ORM\OneToMany(targetEntity:Location::class, mappedBy:"person", orphanRemoval:true)]
@@ -52,6 +66,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    private function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -220,5 +241,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public static function createFromPayload($id, array $payload)
+    {
+        return (new User())
+            ->setId($id)
+            ->setRoles($payload['roles'])
+            ->setEmail($payload['email'])
+            ->setFirstname($payload['firstname'])
+            ->setLastname($payload['lastname'])
+        ;
     }
 }

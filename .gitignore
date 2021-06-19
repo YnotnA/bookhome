@@ -11,3 +11,6 @@
 
 ###> ssl cert files ###
 /docker/nginx/certs
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
