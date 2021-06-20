@@ -44,11 +44,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     private $password;
  
     #[ORM\Column(type:"string", length:20)]
-    #[Groups(['read:User'])]
+    #[Groups(['read:User','read:Booking'])]
     private $firstname;
 
     #[ORM\Column(type:"string", length:20)]
-    #[Groups(['read:User'])]
+    #[Groups(['read:User','read:Booking'])]
     private $lastname;
 
     #[ORM\OneToMany(targetEntity:Location::class, mappedBy:"person", orphanRemoval:true)]
