@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BookingRepository;
 use App\Resolver\BookingMutationResolver;
+use App\Security\Voter\BookingVoter;
 use App\Validator\BookingPeriod;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -20,6 +21,11 @@ use Symfony\Component\Validator\Constraints as Assert;
             'denormalization_context' => ['groups' => ['create:Booking']],
             'mutation' => BookingMutationResolver::class
         ],
+        'update' => [
+            'denormalization_context' => ['groups' => ['update:Booking']],
+            'access_control' => "is_granted('".BookingVoter::EDIT."', previous_object)"
+        ],
+        'delete'
     ]
 )]
 #[BookingPeriod]
@@ -32,16 +38,16 @@ class Booking
     private $id;
 
     #[ORM\Column(type:"string", length:255, nullable:true)]
-    #[Groups(['read', 'create:Booking'])]
+    #[Groups(['read', 'create:Booking', 'update:Booking'])]
     #[Assert\Length(max:"255")]
     private $title;
 
     #[ORM\Column(type:"datetime")]
-    #[Groups(['read', 'create:Booking'])]
+    #[Groups(['read', 'create:Booking', 'update:Booking'])]
     private $start;
 
     #[ORM\Column(type:"datetime")]
-    #[Groups(['read', 'create:Booking'])]
+    #[Groups(['read', 'create:Booking', 'update:Booking'])]
     #[Assert\GreaterThan(propertyPath:"start", message:"La date de départ doit être postérieur à la date d'arrivée ({{ compared_value }}).")]
     private $finish;
 
@@ -58,7 +64,7 @@ class Booking
     private $person;
 
     #[ORM\Column(type:"integer")]
-    #[Groups(['read', 'create:Booking'])]
+    #[Groups(['read', 'create:Booking', 'update:Booking'])]
     #[Assert\GreaterThanOrEqual(1)]
     private $quantity = 1;
 

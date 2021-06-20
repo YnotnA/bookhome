@@ -13,7 +13,7 @@ abstract class Todo
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type:'integer')]
-    #[Groups(['read','delete:Todo'])]
+    #[Groups(['read'])]
     private $id;
 
     #[ORM\Column(type:'string', length:255)]

@@ -19,9 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'denormalization_context' => ['groups' => ['create:Location']],
             'mutation' => LocationMutationResolver::class
         ],
-        'delete' => [
-            'normalization_context' => ['groups' => ['delete:Location']]
-        ]
+        'delete'
     ]
 )]
 class Location
@@ -29,7 +27,7 @@ class Location
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read', 'delete:Location'])]
+    #[Groups(['read'])]
     private $id;
 
     #[ORM\Column(type:"string", length:50)]

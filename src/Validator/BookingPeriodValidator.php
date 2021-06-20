@@ -25,7 +25,7 @@ class BookingPeriodValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, Booking::class);
         }
 
-        if (!empty($this->bookingRepository->findOverlap($value->getLocation(), $value->getStart(), $value->getFinish()))){
+        if (!empty($this->bookingRepository->findOverlap($value))){
             $this->context->buildViolation($constraint->message)
                 ->setParameters([
                     '{{ start }}' => $value->getStart()->format('d/m/Y H:i:s'),

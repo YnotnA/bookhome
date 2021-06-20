@@ -17,9 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
             'denormalization_context' => ['groups' => ['create:Todo']],
             'mutation' => TodoMutationResolver::class
         ],
-        'delete' => [
-            'normalization_context' => ['groups' => ['delete:Todo']]
-        ],
+        'delete',
         'toggle' => [
             'denormalization_context' => ['groups' => ['toggle:Todo']],
             'mutation' => ToggleMutationResolver::class

@@ -14,19 +14,24 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
-    public function findOverlap(Location $location, \DateTimeInterface $start, \DateTimeInterface $finish)
+    public function findOverlap(Booking $booking)
     {
-        return $this->createQueryBuilder('b')
+        $qb = $this->createQueryBuilder('b')
             ->where('b.location = :location')
             ->andWhere('b.start <= :finish')
             ->andWhere('b.finish >= :start')
+            
             ->setParameters([
-                'location' => $location,
-                'start' => $start,
-                'finish' => $finish,
+                'location' => $booking->getLocation(),
+                'start' => $booking->getStart(),
+                'finish' => $booking->getFinish(),
             ])
-            ->getQuery()
-            ->getResult()
         ;
+
+        if (null !== $booking->getId()) {
+            $qb->andWhere('b.id != :booking')->setParameter('booking', $booking->getId());
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }
