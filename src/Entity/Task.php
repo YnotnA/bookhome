@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass:TaskRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read:Todo']],
+    normalizationContext: ['groups' => ['read']],
     graphql: [
         'item_query',
         'create' => [

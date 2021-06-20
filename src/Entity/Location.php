@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass:LocationRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read:Location']],
+    normalizationContext: ['groups' => ['read']],
     graphql: [
         'item_query',
         'create' => [
@@ -29,27 +29,28 @@ class Location
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:Location', 'delete:Location'])]
+    #[Groups(['read', 'delete:Location'])]
     private $id;
 
     #[ORM\Column(type:"string", length:50)]
-    #[Groups(['read:Location', 'create:Location'])]
+    #[Groups(['read', 'create:Location'])]
     private $name;
 
     #[ORM\ManyToOne(targetEntity:User::class, inversedBy:"locations")]
     #[ORM\JoinColumn(nullable:false)]
+    #[Groups(['read'])]
     private $person;
 
     #[ORM\OneToMany(targetEntity:Task::class, mappedBy:"location", orphanRemoval:true)]
-    #[Groups(['read:Location'])]
+    #[Groups(['read'])]
     private $tasks;
 
     #[ORM\OneToMany(targetEntity:Purchase::class, mappedBy:"location", orphanRemoval:true)]
-    #[Groups(['read:Location'])]
+    #[Groups(['read'])]
     private $purchases;
 
     #[ORM\OneToMany(targetEntity:Booking::class, mappedBy:"location", orphanRemoval:true)]
-    #[Groups(['read:Location'])]
+    #[Groups(['read'])]
     private $bookings;
 
     public function __construct()

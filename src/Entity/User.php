@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass:UserRepository::class)]
 #[ORM\Table(name:"`user`")]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read:User']],
+    normalizationContext: ['groups' => ['read']],
     graphql: [
         'me' => [
             'item_query' => MeResolver::class,
@@ -29,32 +29,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:User'])]
+    #[Groups(['read'])]
     private $id;
 
     #[ORM\Column(type:"string", length:180, unique:true)]
-    #[Groups(['read:User'])]
+    #[Groups(['read'])]
     private $email;
 
     #[ORM\Column(type:"json")]
-    #[Groups(['read:User'])]
+    #[Groups(['read'])]
     private $roles = [];
 
     #[ORM\Column(type:"string")]
     private $password;
  
     #[ORM\Column(type:"string", length:20)]
-    #[Groups(['read:User','read:Booking'])]
+    #[Groups(['read'])]
     private $firstname;
 
     #[ORM\Column(type:"string", length:20)]
-    #[Groups(['read:User','read:Booking'])]
+    #[Groups(['read'])]
     private $lastname;
 
     #[ORM\OneToMany(targetEntity:Location::class, mappedBy:"person", orphanRemoval:true)]
+    #[Groups(['read'])]
     private $locations;
 
     #[ORM\OneToMany(targetEntity:Booking::class, mappedBy:"person", orphanRemoval:true)]
+    #[Groups(['read'])]
     private $bookings;
 
     public function __construct()

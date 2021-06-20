@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass:BookingRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read:Booking']],
+    normalizationContext: ['groups' => ['read']],
     graphql: [
         'collection_query',
         'item_query',
@@ -28,37 +28,37 @@ class Booking
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:Booking','delete:Booking'])]
+    #[Groups(['read'])]
     private $id;
 
     #[ORM\Column(type:"string", length:255, nullable:true)]
-    #[Groups(['read:Booking','create:Booking'])]
+    #[Groups(['read', 'create:Booking'])]
     #[Assert\Length(max:"255")]
     private $title;
 
     #[ORM\Column(type:"datetime")]
-    #[Groups(['read:Booking','create:Booking'])]
+    #[Groups(['read', 'create:Booking'])]
     private $start;
 
     #[ORM\Column(type:"datetime")]
-    #[Groups(['read:Booking','create:Booking'])]
+    #[Groups(['read', 'create:Booking'])]
     #[Assert\GreaterThan(propertyPath:"start", message:"La date de départ doit être postérieur à la date d'arrivée ({{ compared_value }}).")]
     private $finish;
 
     #[ORM\ManyToOne(targetEntity:Location::class, inversedBy:"bookings")]
     #[ORM\JoinColumn(nullable:false)]
-    #[Groups(['read:Booking','create:Booking'])]
+    #[Groups(['read', 'create:Booking'])]
     #[Assert\NotNull]
     private $location;
 
     #[ORM\ManyToOne(targetEntity:User::class, inversedBy:"bookings")]
     #[ORM\JoinColumn(nullable:false)]
-    #[Groups(['read:Booking'])]
+    #[Groups(['read'])]
     #[Assert\NotNull]
     private $person;
 
     #[ORM\Column(type:"integer")]
-    #[Groups(['read:Booking','create:Booking'])]
+    #[Groups(['read', 'create:Booking'])]
     #[Assert\GreaterThanOrEqual(1)]
     private $quantity = 1;
 

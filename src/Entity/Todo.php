@@ -13,19 +13,20 @@ abstract class Todo
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type:'integer')]
-    #[Groups(['read:Todo','delete:Todo'])]
+    #[Groups(['read','delete:Todo'])]
     private $id;
 
     #[ORM\Column(type:'string', length:255)]
-    #[Groups(['read:Todo','create:Todo'])]
+    #[Groups(['read','create:Todo'])]
     private $name;
 
     #[ORM\Column(type:'boolean')]
-    #[Groups(['read:Todo'])]
+    #[Groups(['read'])]
     private $completed = false;
 
     #[ORM\ManyToOne(targetEntity:User::class)]
     #[ORM\JoinColumn(nullable:false)]
+    #[Groups(['read'])]
     private $person;
 
     #[ORM\ManyToOne(targetEntity:Location::class)]
