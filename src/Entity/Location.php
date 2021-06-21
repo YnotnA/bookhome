@@ -12,12 +12,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass:LocationRepository::class)]
 #[ApiResource(
+    attributes: ['security' => "is_granted('ROLE_USER')"],
     normalizationContext: ['groups' => ['read']],
     graphql: [
         'item_query',
         'create' => [
             'denormalization_context' => ['groups' => ['create:Location']],
-            'mutation' => LocationMutationResolver::class
+            'mutation' => LocationMutationResolver::class,
+            'security' => "is_granted('ROLE_ADMIN')", 'security_message' => 'Only admins can add location.'
         ],
         'delete'
     ]

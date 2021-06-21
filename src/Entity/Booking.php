@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass:BookingRepository::class)]
 #[ApiResource(
+    attributes: ['security' => "is_granted('ROLE_USER')"],
     normalizationContext: ['groups' => ['read']],
     graphql: [
         'collection_query',

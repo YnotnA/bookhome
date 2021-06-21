@@ -16,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass:UserRepository::class)]
 #[ORM\Table(name:"`user`")]
 #[ApiResource(
+    attributes: ['security' => "is_granted('ROLE_USER')"],
     normalizationContext: ['groups' => ['read']],
     graphql: [
         'me' => [
