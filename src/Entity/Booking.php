@@ -20,7 +20,14 @@ use Symfony\Component\Validator\Constraints as Assert;
         'item_query',
         'create' => [
             'denormalization_context' => ['groups' => ['create:Booking']],
-            'mutation' => BookingMutationResolver::class
+            'mutation' => BookingMutationResolver::class,
+            'args' => [
+                'title' => ['type' => 'String'],
+                'start' => ['type' => 'DateTime'],
+                'finish' => ['type' => 'DateTime'],
+                'location' => ['type' => 'String!'],
+                'quantity' => ['type' => 'Int'],
+            ]
         ],
         'update' => [
             'denormalization_context' => ['groups' => ['update:Booking']],
