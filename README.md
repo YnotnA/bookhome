@@ -1,8 +1,12 @@
 Bookhome
 =======
 
+Bookhome est une API permettant la gestion locative de différents biens par utilisateur.
+Il est possible d'effectuer des réservations, ainsi que d'ajouter des taches ou une liste de courses par location.
+
 - [Installation en local avec docker](#installation-en-local-avec-docker)
 - [GraphQL](#graphql)
+
 
 Installation en local avec docker
 ---------------------------------
@@ -65,7 +69,7 @@ curl -X 'POST' \
   --insecure 'https://api.bookhome.fr.lan/login' \
   -H 'Content-Type: application/json' \
   -d '{
-    "email": "admin@bookhome.com",
+    "email": "jdurand@bookhome.com",
     "password": "admin"
   }'
 ```
@@ -88,7 +92,7 @@ Réponse :
 ```
 
 **Exemple**
- Info sur l'utilisateur connecté
+Info sur l'utilisateur connecté
 ```graphql
 {
   meUser{
@@ -114,6 +118,19 @@ Réponse :
       "id": "\/users\/1",
       "email": "admin@bookhome.com",
       "firstname": "admin"
+    }
+  }
+}
+```
+
+Créer une nouvelle réservation
+```graphql
+mutation {
+  createBooking(input:{start:"2021-06-30", finish:"2021-07-02 12:00", location:"/locations/1", quantity:2}) {
+    booking {
+      id
+      start
+      finish
     }
   }
 }
